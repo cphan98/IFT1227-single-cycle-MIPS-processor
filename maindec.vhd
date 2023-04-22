@@ -1,8 +1,7 @@
 library IEEE; use IEEE.STD_LOGIC_1164.all;
 
 entity maindec is -- main control decoder
-	port (op: in STD_LOGIC_VECTOR (5 downto 0);
-			funct: in STD_LOGIC_VECTOR (5 downto 0);
+	port (op, funct: in STD_LOGIC_VECTOR (5 downto 0);
 			regwrite: out STD_LOGIC;
 			regdst: out STD_LOGIC_VECTOR (1 downto 0);
 			alusrc: out STD_LOGIC_VECTOR (1 downto 0);
@@ -10,7 +9,7 @@ entity maindec is -- main control decoder
 			memwrite: out STD_LOGIC;
 			memtoreg: out STD_LOGIC_VECTOR (1 downto 0);
 			jump, jumpr: out STD_LOGIC;
-			convert: out;
+			convert: out STD_LOGIC;
 			aluop: out STD_LOGIC_VECTOR (1 downto 0));
 end;
 
