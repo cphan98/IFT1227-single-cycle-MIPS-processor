@@ -8,20 +8,23 @@ end;
 
 architecture behave of aludec is
 begin
-process (aluop, funct) begin
+process(aluop, funct) begin
 	case aluop is
 		when "00" => alucontrol <= "010"; -- add 
 		when "01" => alucontrol <= "110"; -- sub 
 		when "10" => 
 			case funct is
-				when "100000" => alucontrol <= "010"; -- add
-				when "100010" => alucontrol <= "110"; -- sub
 				when "100100" => alucontrol <= "000"; -- and
 				when "100101" => alucontrol <= "001"; -- or
+				when "100000" => alucontrol <= "010"; -- add
+				when "100010" => alucontrol <= "110"; -- sub
 				when "101010" => alucontrol <= "111"; -- slt
+				when "001000" => alucontrol <= "000"; -- jr
+				when "111111" => alucontrol <= "010"; -- index2adr
 				when others => alucontrol <= "---";
 			end case;
-		when others => alucontrol <= "---"; --
+		when "11" => alucontrol <= "000" -- and
+		when others => alucontrol <= "---"; -- illegal aluop
 	end case;
 end process;
 end;
