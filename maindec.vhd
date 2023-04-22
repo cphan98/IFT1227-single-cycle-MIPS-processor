@@ -30,8 +30,8 @@ process(op, funct) begin
 		when "000100" => controls <= "00000100000001"; -- BEQ
 		when "001000" => controls <= "10001000000000"; -- ADDI
 		when "000010" => controls <= "00000000010000"; -- J
-		when "001100" => controls <= "10010000000011"-- ANDI
-		when "000011" => controls <= "11000001010000"-- JAL
+		when "001100" => controls <= "10010000000011"; -- ANDI
+		when "000011" => controls <= "11000001010000"; -- JAL
 		when others => controls <= "---------"; -- illegal op
 	end case;
 end process;
