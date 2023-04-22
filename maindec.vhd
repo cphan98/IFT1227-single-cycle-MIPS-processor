@@ -20,13 +20,11 @@ begin
 process(op) begin
 	case op is
 		when "000000" => -- R-type
-			if funct = "001000" then
-				controls <= "00000000001010"; -- JR
-			elsif funct = "111111" then
-				controls <= "10100000000110"; -- INDEX2ADR
-			else
-				controls <= "10100000000010"; -- AND, OR, ADD, SUB, SLT
-			end if;
+			case funct is
+				when "001000" => controls <= "00000000001010"; -- JR
+				when "111111" => controls <= "10100000000110"; -- INDEX2ADR
+				when others => controls <= "10100000000010"; -- AND, OR, ADD, SUB, SLT
+			end case;
 		when "100011" => controls <= "10001000100000"; -- LW
 		when "101011" => controls <= "00001010000000"; -- SW
 		when "000100" => controls <= "00000100000001"; -- BEQ
