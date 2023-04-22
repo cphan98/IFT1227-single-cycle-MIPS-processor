@@ -17,7 +17,7 @@ end;
 architecture behave of maindec is
 	signal controls: STD_LOGIC_VECTOR(13 downto 0);
 begin
-process(op) begin
+process(op, funct) begin
 	case op is
 		when "000000" => -- R-type
 			case funct is
