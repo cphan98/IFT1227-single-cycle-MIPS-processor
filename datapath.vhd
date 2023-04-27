@@ -5,10 +5,10 @@ use IEEE.STD_LOGIC_ARITH.all;
 entity datapath is -- MIPS datapath
 	port(clk, reset: in STD_LOGIC;
 			instr: in STD_LOGIC_VECTOR(31 downto 0);
-			readdata: in STD_LOGIC_VECTOR(31 downto 0));
+			readdata: in STD_LOGIC_VECTOR(31 downto 0);
 			alucontrol: in STD_LOGIC_VECTOR(2 downto 0);
 			alusrc: in STD_LOGIC_VECTOR(1 downto 0);
-			jump, jumpr: out STD_LOGIC;
+			jump, jumpr: in STD_LOGIC;
 			memtoreg: in STD_LOGIC_VECTOR(1 downto 0);
 			pcsrc: in STD_LOGIC;
 			regdst: in STD_LOGIC_VECTOR(1 downto 0);
@@ -16,7 +16,7 @@ entity datapath is -- MIPS datapath
 			convert: in STD_LOGIC;
 			pc: buffer STD_LOGIC_VECTOR(31 downto 0);
 			aluout, writedata: buffer STD_LOGIC_VECTOR(31 downto 0);
-			zero: out STD_LOGIC;
+			zero: out STD_LOGIC);
 end;
 
 architecture struct of datapath is
