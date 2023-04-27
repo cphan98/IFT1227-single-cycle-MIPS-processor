@@ -16,26 +16,36 @@ begin
 		variable mem: ramtype;
 	begin
 		-- initialize memory
-		-- TODO: add instr jr, andi, index2adr, jal
-		mem(0)  := X"20020005";	--     addi $v0, $0, 5	   	# $v0(2) = 5
-		mem(1)  := X"2003000c";	--     addi $v1, $0, 12	   	# $v1(3) = 12
-		mem(2)  := X"2067fff7";	--     addi $a3, $v1,-9 	# $a3(7) = $v1(3)(12) - 9 = 3
-		mem(3)  := X"00e22025";	--     or   $a0, $a3, $v0	# $a0(4) = $a3(7) or $v0(2) = 3 or 5 = 7
-		mem(4)  := X"00642824";	--     and  $a1, $v1, $a0	# $a1(5) = $v1(3) and $a0(4)= 12 and 7 = 4
-		mem(5)  := X"00a42820";	--     add  $a1, $a1, $a0	# $a1(5) = $a1(5) + $a0(4) = 4 + 7 = 11
-		mem(6)  := X"10a7000a";	--     beq  $a1, $a3, end	# $a1(5)==$a3(7)? end: PC=PC+4; 11==3 ? PC=PC+4
-		mem(7)  := X"0064202a";	--     slt  $a0, $v1, $a0	# $v1(3)<$a0(4) ? $a0 = 1 : $a0 = 0; 12 < 7 => $a0 = 0
-		mem(8)  := X"10800001";	--     beq  $a0, $0, ar1	# $a0(4)==0?ar1:PC = PC+4; 0==0 goto ar1 
-		mem(9)  := X"20050000";	--     addi $a1, $0, 0		
-		mem(10) := X"00e2202a";	--ar1: slt 	$a0, $a3, $v0	# $a3(7)<$v0(2)?$a0(4)=1:$a0=0; 3<5,$a0=1
-		mem(11) := X"00853820";	--	   add 	$a3, $a0, $a1	# $a3(7)=$a0(4)+$a1(5); 1+11=12
-		mem(12) := X"00e23822";	--	   sub 	$a3, $a3, $v0	# $a3(7)=$a3(7)-$v0(2); 12-5=7
-		mem(13) := X"ac670044";	--	   sw 	$a3, 68($v1)	# $a3(7)->M[68+$v1(3)]; 7->M[68+12=80] #test 1
-		mem(14) := X"8c020050";	--	   lw 	$v0, 80($0)		# $v0(2) = M[80+0]; $v0 = 7
-		mem(15) := X"08000011";	--	   j 	end			   	# goto end
-		mem(16) := X"20020001";	--	   addi $v0, $0, 1
-		mem(17) := X"ac02003C";	--end: sw 	$v0, 60($0) 	# $v0(2) write M[60]; M[60]=7; #test 2
-		for ii in 18 to 63 
+		mem(0)  := X"20020005";	--		addi		$v0, $0, 5	   	# $v0(2) = 5
+		mem(1)  := X"2003000c";	--      addi 		$v1, $0, 12	   	# $v1(3) = 12
+		mem(2)  := X"2067fff7";	--      addi 		$a3, $v1,-9 	# $a3(7) = $v1(3) - 9 = 3
+		mem(3)  := X"00e22025";	--      or   		$a0, $a3, $v0	# $a0(4) = $a3(7) or $v0(2) = 3 or 5 = 7
+		mem(4)  := X"00642824";	--      and  		$a1, $v1, $a0	# $a1(5) = $v1(3) and $a0(4) = 12 and 7 = 4
+		mem(5)  := X"00a42820";	--      add  		$a1, $a1, $a0	# $a1(5) = $a1(5) + $a0(4) = 4 + 7 = 11
+		mem(6)  := X"10a7000a";	--      beq  		$a1, $a3, end	# $a1(5) == $a3(7) ? end: PC = PC + 4; 11 == 3 ? PC = PC + 4
+		mem(7)  := X"0064202a";	--      slt  		$a0, $v1, $a0	# $v1(3) < $a0(4) ? $a0 = 1 : $a0 = 0; 12 < 7 => $a0 = 0
+		mem(8)  := X"10800001";	--      beq  		$a0, $0, ar1	# $a0(4) == 0 ? ar1 : PC = PC + 4; 0 == 0 goto ar1 
+		mem(9)  := X"20050000";	--      addi 		$a1, $0, 0		
+		mem(10) := X"00e2202a";	--ar1:	slt			$a0, $a3, $v0	# $a3(7) < $v0(2) ? $a0 = 1 : $a0 = 0; 3 < 5 , $a0 = 1
+		mem(11) := X"00853820";	--	    add			$a3, $a0, $a1	# $a3(7) = $a0(4) + $a1(5); 1 + 11 = 12
+		mem(12) := X"00e23822";	--	    sub			$a3, $a3, $v0	# $a3(7) = $a3(7) - $v0(2); 12 - 5 = 7
+		mem(13) := X"ac670044";	--	    sw 			$a3, 68($v1)	# $a3(7) -> M[68 + $v1(3)]; 7 -> M[68 + 12 = 80]; #test 1
+		mem(14) := X"8c020050";	--	    lw 			$v0, 80($0)		# $v0(2) = M[80]; $v0 = 7
+		mem(15) := X"08000011";	--	    j 			end			   	# goto end1
+		mem(16) := X"20020001";	--	    addi 		$v0, $0, 1		
+		mem(17) := X"ac02003C";	--end1:	sw 			$v0, 60($0) 	# $v0(2) -> M[60]; 7 -> M[60]; #test 2
+		-- new code starts here
+		mem(18) := X"30660005"; --      andi 		$a3, $v1, 5		# $a3(7) = $v1(3) and 5 = 12 and 5 = 4
+		-- TODO: convert instr into hex
+		mem(19)	:= X""; --      jal     ar2 # goto ar2; $ra(31) = PC + 4; PC = {(PC + 4)[31:28], addr, 2'bits 0}
+		mem(20) := X""; --      sw      $v0, 52($0) # $v0(2) -> M[52]; 7 -> M[52]; #test 4
+		mem(21) := X""; --      j       end2 # goto end2
+		mem(22) := X""; --ar2:	addi    $v1, $0, 24 # $v1(3) = $0 + 24 = 0 + 24 = 24
+		mem(23) := X""; --      index2adr $a2, $a3, $v1 # $a2(6) = $a3(7) * 4 + $v1 = 4 * 4 + 24 = 40
+		mem(24) := X""; --      sw      $v0, $a2($0) # $v0(2) -> M[$a2]; 7 -> M[40]; #test 3
+		mem(25) := X""; --      jr      $ra # PC = $ra
+		mem(26) := X""; --end2:	sw 	$v0, 50($0) 	# $v0(2) -> M[50]; 7 -> M[50]; #test 5
+		for ii in 27 to 63 
 			loop mem(ii) := X"00000000";
       	end loop;  -- ii
 		-- read memory
