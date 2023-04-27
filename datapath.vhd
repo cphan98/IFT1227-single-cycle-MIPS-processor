@@ -6,15 +6,16 @@ entity datapath is -- MIPS datapath
 	port(clk, reset: in STD_LOGIC;
 			instr: in STD_LOGIC_VECTOR(31 downto 0);
 			readdata: in STD_LOGIC_VECTOR(31 downto 0));
-			alucontrol: in STD_LOGIC_VECTOR (2 downto 0);
+			alucontrol: in STD_LOGIC_VECTOR(2 downto 0);
 			alusrc: in STD_LOGIC_VECTOR(1 downto 0);
 			jump, jumpr: out STD_LOGIC;
 			memtoreg: in STD_LOGIC_VECTOR(1 downto 0);
 			pcsrc: in STD_LOGIC;
 			regdst: in STD_LOGIC_VECTOR(1 downto 0);
 			regwrite: in STD_LOGIC;
-			pc: buffer STD_LOGIC_VECTOR (31 downto 0);
-			aluout, writedata: buffer STD_LOGIC_VECTOR (31 downto 0);
+			convert: in STD_LOGIC;
+			pc: buffer STD_LOGIC_VECTOR(31 downto 0);
+			aluout, writedata: buffer STD_LOGIC_VECTOR(31 downto 0);
 			zero: out STD_LOGIC;
 end;
 
@@ -44,7 +45,10 @@ architecture struct of datapath is
 		port(a: in STD_LOGIC_VECTOR(15 downto 0);
 				y: out STD_LOGIC_VECTOR(31 downto 0));
 	end component;
-	-- TODO
+	component zeroext
+		port(a: in STD_LOGIC_VECTOR(15 downto 0);
+				y: out STD_LOGIC_VECTOR(31 downto 0));
+	end component;
 	component flopr 
 		generic(width: integer);
 		port(clk, reset: in STD_LOGIC;
@@ -72,21 +76,47 @@ architecture struct of datapath is
 	signal data1, data1sh: STD_LOGIC_VECTOR(31 downto 0);
 begin
 	-- next PC logic
-	-- TODO
-	
-	pcjump <= pcplus4 (31 downto 28) & instr (25 downto 0) & "00";
-	pcreg: flopr generic map(32) port map(clk, reset, pcnext, pc);
-	pcadd1: adder port map(pc, X"00000004", pcplus4);
-	immsh: sl2 port map(signimm, signimmsh);
-	pcadd2: adder port map(pcplus4, signimmsh, pcbranch);
-	pcbrmux: mux2 generic map(32) port map(pcplus4, pcbranch, pcsrc, pcnextbr);
-	pcmux: mux2 generic map(32) port map(pcnextbr, pcjump, jump, pcnext);
+	pcjump <= pcplus4(31 downto 28) & instr(25 downto 0) & "00";
+	pcreg: flopr 
+		generic map(32) 
+		port map(clk, reset, pcnext, pc);
+	pcadd1: adder 
+		port map(pc, X"00000004", pcplus4);
+	immsh: sl2 
+		port map(signimm, signimmsh);
+	pcadd2: adder 
+		port map(pcplus4, signimmsh, pcbranch);
+	pcbrmux: mux2 
+		generic map(32) 
+		port map(pcplus4, pcbranch, pcsrc, pcnextbr);
+	pcjrmux: mux2
+		generic map(32)
+		port map(data1, pcnextbr, jumpr, pcjumpr);
+	pcjmux: mux2 
+		generic map(32) 
+		port map(pcjump, pcjumpr, jump, pcnext);
 	-- register file logic
-	rf: regfile port map(clk, regwrite, instr(25 downto 21),instr(20 downto 16), writereg, result, srca, writedata);
-	wrmux: mux2 generic map(5) port map(instr(20 downto 16),instr(15 downto 11), regdst, writereg);
-	resmux: mux2 generic map(32) port map(aluout, readdata, memtoreg, result);
-	se: signext port map(instr(15 downto 0), signimm);
+	rf: regfile 
+		port map(clk, regwrite, instr(25 downto 21), instr(20 downto 16), writereg, result, data1, writedata);
+	wrmux: mux4
+		generic map(5)
+		port map(instr(20 downto 16), instr(15 downto 11), "11111", "-----", regdst, writereg);
+	resmux: mux4
+		generic map(31)
+		port map(aluout, readdata, pcplus4, X"--------", memtoreg, result);
+	se: signext 
+		port map(instr(15 downto 0), signimm);
 	-- ALU logic
-	srcbmux: mux2 generic map (32) port map(writedata, signimm, alusrc, srcb);
-	mainalu: alu port map(srca, srcb, alucontrol, zero, aluout);
+	ze: zeroext
+		port map(instr(15 downto 0), zeroimm);
+	srcbmux: mux4
+		generic map(32)
+		port map(writedata, signimm, zeroimm, X"--------", alusrc, srcb);
+	idxsh: sl2
+		port map(data1, data1sh);
+	srcamux: mux2
+		generic map(32)
+		port map(data1, data1sh, convert, srca);
+	mainalu: alu 
+		port map(srca, srcb, alucontrol, zero, aluout);
 end;
