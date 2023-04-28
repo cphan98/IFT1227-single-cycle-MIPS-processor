@@ -4,10 +4,10 @@ use IEEE.STD_LOGIC_1164.all;
 entity proc_mips is -- single cycle MIPS processor
 	port(clk, reset: in STD_LOGIC;
 			instr: in STD_LOGIC_VECTOR(31 downto 0);
-			readdata: in STD_LOGIC_VECTOR(31 downto 0));
+			readdata: in STD_LOGIC_VECTOR(31 downto 0);
 			pc: out STD_LOGIC_VECTOR(31 downto 0);
 			memwrite: out STD_LOGIC;
-			aluout, writedata: out STD_LOGIC_VECTOR(31 downto 0);
+			aluout, writedata: out STD_LOGIC_VECTOR(31 downto 0));
 end;
 
 architecture struct of proc_mips is
