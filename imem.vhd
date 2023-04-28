@@ -31,20 +31,20 @@ begin
 		mem(12) := X"00e23822";	--	    sub			$a3, $a3, $v0	# $a3(7) = $a3(7) - $v0(2); 12 - 5 = 7
 		mem(13) := X"ac670044";	--	    sw 			$a3, 68($v1)	# $a3(7) -> M[68 + $v1(3)]; 7 -> M[68 + 12 = 80]; #test 1
 		mem(14) := X"8c020050";	--	    lw 			$v0, 80($0)		# $v0(2) = M[80]; $v0 = 7
-		mem(15) := X"08000011";	--	    j 			end			   	# goto end1
+		mem(15) := X"08000011";	--	    j 			end1			# goto end1
 		mem(16) := X"20020001";	--	    addi 		$v0, $0, 1		
 		mem(17) := X"ac02003C";	--end1:	sw 			$v0, 60($0) 	# $v0(2) -> M[60]; 7 -> M[60]; #test 2
 		-- new code starts here
-		mem(18) := X"30660005"; --      andi 		$a3, $v1, 5		# $a3(7) = $v1(3) and 5 = 12 and 5 = 4
-		-- TODO: convert instr into hex
-		mem(19)	:= X""; --      jal     ar2 # goto ar2; $ra(31) = PC + 4; PC = {(PC + 4)[31:28], addr, 2'bits 0}
-		mem(20) := X""; --      sw      $v0, 52($0) # $v0(2) -> M[52]; 7 -> M[52]; #test 4
-		mem(21) := X""; --      j       end2 # goto end2
-		mem(22) := X""; --ar2:	addi    $v1, $0, 24 # $v1(3) = $0 + 24 = 0 + 24 = 24
-		mem(23) := X""; --      index2adr $a2, $a3, $v1 # $a2(6) = $a3(7) * 4 + $v1 = 4 * 4 + 24 = 40
-		mem(24) := X""; --      sw      $v0, $a2($0) # $v0(2) -> M[$a2]; 7 -> M[40]; #test 3
-		mem(25) := X""; --      jr      $ra # PC = $ra
-		mem(26) := X""; --end2:	sw 	$v0, 50($0) 	# $v0(2) -> M[50]; 7 -> M[50]; #test 5
+		-- TODO: double check MIPS code and hexadecimal instr
+		mem(18) := X"30660005"; --      andi		$a3, $v1, 5		# $a3(7) = $v1(3) and 5 = 12 and 5 = 4
+		mem(19)	:= X"0c000016"; --      jal			ar2 			# goto ar2; $ra(31) = PC + 4; PC = {(PC + 4)[31:28], addr, 2'bits 0}
+		mem(20) := X"ac020034"; --      sw			$v0, 52($0) 	# $v0(2) -> M[52]; 7 -> M[52]; #test 4
+		mem(21) := X"0800001a"; --      j			end2 			# goto end2
+		mem(22) := X"20030018"; --ar2:	addi		$v1, $0, 24 	# $v1(3) = $0 + 24 = 0 + 24 = 24
+		mem(23) := X"00e3303f"; --		index2adr 	$a2, $a3, $v1 	# $a2(6) = $a3(7) * 4 + $v1 = 4 * 4 + 24 = 40
+		mem(24) := X"acc20000"; --		sw			$v0, 0($a2) 	# $v0(2) -> M[$a2]; 7 -> M[40]; #test 3
+		mem(25) := X"03e00008"; --		jr			$ra 			# PC = $ra
+		mem(26) := X"ac020032"; --end2:	sw			$v0, 50($0)		# $v0(2) -> M[50]; 7 -> M[50]; #test 5
 		for ii in 27 to 63 
 			loop mem(ii) := X"00000000";
       	end loop;  -- ii
