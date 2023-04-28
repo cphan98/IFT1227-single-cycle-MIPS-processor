@@ -36,13 +36,13 @@ begin
 		mem(17) := X"ac02003C";	--end1:	sw 			$v0, 60($0) 	# $v0(2) -> M[60]; 7 -> M[60]; #test 2
 		-- new code starts here
 		-- TODO: double check MIPS code and hexadecimal instr
-		mem(18) := X"30660005"; --      andi		$a3, $v1, 5		# $a3(7) = $v1(3) and 5 = 12 and 5 = 4
+		mem(18) := X"30670005"; --      andi		$a3, $v1, 5		# $a3(7) = $v1(3) and 5 = 12 and 5 = 4
 		mem(19)	:= X"0c000016"; --      jal			ar2 			# goto ar2; $ra(31) = PC + 4; PC = {(PC + 4)[31:28], addr, 2'bits 0}
 		mem(20) := X"ac020034"; --      sw			$v0, 52($0) 	# $v0(2) -> M[52]; 7 -> M[52]; #test 4
 		mem(21) := X"0800001a"; --      j			end2 			# goto end2
 		mem(22) := X"20030018"; --ar2:	addi		$v1, $0, 24 	# $v1(3) = $0 + 24 = 0 + 24 = 24
 		mem(23) := X"00e3303f"; --		index2adr 	$a2, $a3, $v1 	# $a2(6) = $a3(7) * 4 + $v1 = 4 * 4 + 24 = 40
-		mem(24) := X"acc20000"; --		sw			$v0, 0($a2) 	# $v0(2) -> M[$a2]; 7 -> M[40]; #test 3
+		mem(24) := X"ac820000"; --		sw			$v0, 0($a2) 	# $v0(2) -> M[$a2]; 7 -> M[40]; #test 3
 		mem(25) := X"03e00008"; --		jr			$ra 			# PC = $ra
 		mem(26) := X"ac020032"; --end2:	sw			$v0, 50($0)		# $v0(2) -> M[50]; 7 -> M[50]; #test 5
 		for ii in 27 to 63 
