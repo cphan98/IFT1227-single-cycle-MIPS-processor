@@ -13,9 +13,9 @@ end;
 architecture behave of regfile is
 type ramtype is array(31 downto 0) of STD_LOGIC_VECTOR(31 downto 0);	signal mem: ramtype;
 begin
--- three-ported register file
--- read two ports combinationally
--- write third port on rising edge of clock
+	-- three-ported register file
+	-- read two ports combinationally
+	-- write third port on rising edge of clock
 	process(clk) begin
 		if clk'event and clk = '1' then
 			if we3 = '1' then mem(CONV_INTEGER(wa3)) <= wd3;

@@ -95,6 +95,7 @@ begin
 	pcjmux: mux2 
 		generic map(32) 
 		port map(pcjump, pcjumpr, jump, pcnext);
+	
 	-- register file logic
 	rf: regfile 
 		port map(clk, regwrite, instr(25 downto 21), instr(20 downto 16), writereg, result, data1, writedata);
@@ -106,6 +107,7 @@ begin
 		port map(aluout, readdata, pcplus4, X"--------", memtoreg, result);
 	se: signext 
 		port map(instr(15 downto 0), signimm);
+		
 	-- ALU logic
 	ze: zeroext
 		port map(instr(15 downto 0), zeroimm);

@@ -35,7 +35,6 @@ begin
 		mem(16) := X"20020001";	--	    addi 		$v0, $0, 1		
 		mem(17) := X"ac02003C";	--end1:	sw 			$v0, 60($0) 	# $v0(2) -> M[60]; 7 -> M[60]; #test 2
 		-- new code starts here
-		-- TODO: double check MIPS code and hexadecimal instr
 		mem(18) := X"30670005"; --      andi		$a3, $v1, 5		# $a3(7) = $v1(3) and 5 = 12 and 5 = 4
 		mem(19)	:= X"0c000016"; --      jal			ar2 			# goto ar2; $ra(31) = PC + 4; PC = {(PC + 4)[31:28], addr, 2'bits 0}
 		mem(20) := X"ac020034"; --      sw			$v0, 52($0) 	# $v0(2) -> M[52]; 7 -> M[52]; #test 4
@@ -48,6 +47,7 @@ begin
 		for ii in 27 to 63 
 			loop mem(ii) := X"00000000";
       	end loop;  -- ii
+		
 		-- read memory
 		rd <= mem(CONV_INTEGER(a));
 	end process;
