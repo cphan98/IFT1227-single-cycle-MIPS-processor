@@ -48,7 +48,18 @@ begin
 					report "test 2 done";
 					else report "test 2 : error";
 					end if;
-				-- TODO: add imem tests 3, 4, 5 and edit imem.vhd when necessary
+				when 52 => if(conv_integer(writedata) = 7) then
+					report "test 4 done";
+					else report "test 4 : error";
+					end if;
+				when 40 => if(conv_integer(writedata) = 7) then
+					report "test 3 done";
+					else report "test 3 : error";
+					end if;
+				when 50 => if(conv_integer(writedata) = 7) then
+					report "test 5 done";
+					else report "test 5 : error";
+					end if;
 				when others => report "";
 			end case;
 		end if;
